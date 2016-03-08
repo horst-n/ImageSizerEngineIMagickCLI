@@ -13,7 +13,7 @@ class ImageSizerEngineIMagickCLI extends ImageSizerEngine implements Module, Con
     public static function getModuleInfo() {
         return array(
             'title' => 'ImageSizerEngine ImageMagick CLI',
-            'version' => 10,
+            'version' => 11,
             'summary' => "Upgrades image manipulations to use The CLI (exec) version of ImageMagick",
             'author' => 'Horst Nogajski',
             'autoload' => false,
@@ -271,17 +271,47 @@ class ImageSizerEngineIMagickCLI extends ImageSizerEngine implements Module, Con
      *
      */
     protected function imSharpen($mode) {
-        switch($mode) {
-            case 'strong':
-                $m = array(0, 0.5, 5.0, 0.02);
-                break;
-            case 'medium':
-                $m = array(0, 0.5, 3.2, 0.04);
-                break;
-            case 'soft':
-            default:
-                $m = array(0, 0.5, 2.4, 0.07);
-                break;
+        $mp = intval($this->finalHeight * $this->finalWidth);
+        if($mp > 1440000) {
+            switch($mode) {
+                case 'strong':
+                    $m = array(0, 0.5, 4.6, 0.03);
+                    break;
+                case 'medium':
+                    $m = array(0, 0.5, 3.0, 0.04);
+                    break;
+                case 'soft':
+                default:
+                    $m = array(0, 0.5, 2.3, 0.07);
+                    break;
+            }
+        } else if($mp > 480000) {
+            switch($mode) {
+                case 'strong':
+                    $m = array(0, 0.5, 3.0, 0.04);
+                    break;
+                case 'medium':
+                    $m = array(0, 0.5, 2.3, 0.06);
+                    break;
+                case 'soft':
+                default:
+                    $m = array(0, 0.5, 1.8, 0.08);
+                    break;
+            }
+        } else {
+            // we have small variations, thumbnails
+            switch($mode) {
+                case 'strong':
+                    $m = array(0, 0.5, 2.0, 0.06);
+                    break;
+                case 'medium':
+                    $m = array(0, 0.5, 1.7, 0.08);
+                    break;
+                case 'soft':
+                default:
+                    $m = array(0, 0.5, 1.2, 0.1);
+                    break;
+            }
         }
         return $m;
     }

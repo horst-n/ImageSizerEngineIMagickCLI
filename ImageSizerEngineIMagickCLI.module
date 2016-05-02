@@ -18,6 +18,7 @@ class ImageSizerEngineIMagickCLI extends ImageSizerEngine implements Module, Con
             'author' => 'Horst Nogajski',
             'autoload' => false,
             'singular' => false,
+            'requires' => array('ProcessWire>=3.0.10')
         );
     }
 

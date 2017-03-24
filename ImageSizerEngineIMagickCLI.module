@@ -110,10 +110,9 @@ class ImageSizerEngineIMagickCLI extends ImageSizerEngine implements Module, Con
             $this->IMPATH = self::shellpath($this->imageMagickPath);
         }
 
-        // for regular (production runtime) checks, we only look if the directory exists,
+        // for regular (production runtime) checks, we skip the remaining checks,
         // but when installing the module, we do a full check
-        $dirExists = is_dir($this->IMPATH);
-        if('install' != $action) return $dirExists;
+        if('install' != $action) return true;
 
         // full check:
         $s = ini_get('disable_functions');
@@ -127,7 +126,7 @@ class ImageSizerEngineIMagickCLI extends ImageSizerEngine implements Module, Con
         }
 
         $executable = 'convert';
-        if(!file_exists($this->IMPATH . $executable) && !file_exists($this->IMPATH . $executable . '.exe')) {
+        if(!is_executable($this->IMPATH . $executable) && !is_executable($this->IMPATH . $executable . '.exe')) {
             if($debug) $this->warning(sprintf($this->_("%s - Missing executable: %s"), __CLASS__, $executable));
             self::$supported = false;
             return false;
